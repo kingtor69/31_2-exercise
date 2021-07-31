@@ -15,4 +15,7 @@ body {
 
 .card {
 	position: absolute;
+	margin: 60px;
+	border: green;
+	border-radius: 12px;
 }
