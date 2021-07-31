@@ -69,10 +69,9 @@ const part2step3 = document.querySelector('#II-3');
 let cardPromise = axios
     .get('http://deckofcardsapi.com/api/deck/new/shuffle/')
     .then(res => {
-        axios.get(`http://deckofcardsapi.com/api/deck/${res.data.deck_id}/draw/?count=1`)
+        return axios.get(`http://deckofcardsapi.com/api/deck/${res.data.deck_id}/draw/?count=1`)
     })
     .then(res => {
-        console.log(res)
         return parseCards(res.data.cards, part2step1)
     })
     .catch(err => {
@@ -88,3 +87,25 @@ function parseCards(cards, element) {
     }
     displayResult(cardsParsed, element);
 }
+
+// step 2
+const twoCards = [];
+let deck;
+let twoCardPromise = axios
+    .get('http://deckofcardsapi.com/api/deck/new/shuffle/')
+    .then(deal => {
+        deck = deal.data.deck_id;
+        return axios.get(`http://deckofcardsapi.com/api/deck/${deck}/draw/?count=1`)
+    })
+    .then(one => {
+        twoCards.push(one.data.cards[0])
+        return axios.get(`http://deckofcardsapi.com/api/deck/${deck}/draw/?count=1`)
+    })
+    .then(two => {
+        twoCards.push(two.data.cards[0])
+        return parseCards(twoCards, part2step2)
+    })
+    .catch(err => {
+        return displayResult([err], part2step2)
+    });
+
